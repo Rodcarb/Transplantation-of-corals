@@ -7,8 +7,8 @@ library(ggplot2) #graphs
 library(ggpubr) #graphs like ggboxplot
 library(readxl) #read xlsx files
 library(FSA) #Dunn multiple comparison after Kruskal-Wallis
-
-
+library(vegan) #decostand function
+library(pairwiseAdonis)#pairwise.adonis function
 
 
 
@@ -440,6 +440,42 @@ kruskal.test(Yield~Species, data = tran12m) #chi-squared = 26.339, df = 4, p-val
 dunnTest(Yield~Species, data = tran12m, method = "bonferroni")
 
 
+#### Pre-assessment of candidate sites (Figure S2) ####
+##upload data
+data.ben<-read.csv('Pre_Assessment_biotic_data2.csv',header=TRUE)
+
+#rename rowname
+row.names(data.ben)<-data.ben[,1]
+data.ben<-data.ben[,-1]
+
+#remove all species with no presence
+data.ben<-data.ben[, colSums(data.ben != 0) > 0]
+
+###PCoA:
+dismat <- vegdist(data.ben.1[,2:63], method = "euclidian")
+sites <- data.ben.1[,1]
+pcoa <- cmdscale(dismat)
+efit <- envfit(pcoa,data.ben.1[,2:63])
+
+#plot
+plot(pcoa, col = cols[grp], pch = c(15,17,19,19,11)[grp],
+     xlim = c(-0.11,0.15), ylim=c(-0.16,0.09),
+     xlab = "PCoA 1 (34.4%)", ylab = "PCoA 2 (22.7%)")
+abline(h = 0, v = 0, lty = 2)
+
+#ordiellipses   
+ordiellipse(pcoa, sites, display = "sites", col = c('#ff8738','#90b010','#330066','#0000FF','#FF0000'),
+            kind = "sd", lty=c(1), conf = 0.95, alpha = 0.05, lwd = 1.5) #en kind: sd or se
+
+# calculate the percentage of variation that each PCoA axis accounts for:
+mds.stuff <- cmdscale(dismat, eig=TRUE, x.ret=TRUE)
+mds.var.per <- round(mds.stuff$eig/sum(mds.stuff$eig)*100, 1)
+mds.var.per #34.4 22.7 12.0  8.5  4.9  3.6  3.1  2.4  1.7  1.4  1.1  0.8  0.8  0.6  0.6  0.4  0.3  0.2
+
+# PERMANOVA:
+perma <-adonis2(dismat~data.ben.1$sites, data = data.ben, by=NULL)
+perma #Df 4,20 ; R2=0.35944; F=2.8057, p=0.001 ***
+pairwise.adonis(dismat,data.ben.1$sites)
 
 
 

@@ -4,6 +4,7 @@
 library(moments) #skewness
 library(ggfortify) #autoplot for PCA
 library(ggplot2) #graphs
+library(ggpubr) #graphs like ggboxplot
 library(readxl) #read xlsx files
 library(FSA) #Dunn multiple comparison after Kruskal-Wallis
 
@@ -166,7 +167,7 @@ ggplot(fp, aes(x=Time, color=To))+
           panel.grid.major = element_blank())
 
 
-###Psammocora albopicta:
+###Psammocora cf. albopicta:
 pa <- read_excel("Psammocora_albopicta_Relative_Growth.xlsx", col_names = TRUE)
 f <-c(4)
 pa[ , f] <- apply(pa[ , f], 2,            
@@ -197,7 +198,7 @@ ggplot(pa, aes(x=Time, color=To))+
           panel.grid.minor = element_blank(),
           panel.grid.major = element_blank())
 
-#### STATS ####
+#### Relative growth STATS ####
 gr <- read_excel("Corals_Relative_Growth.xlsx", col_names = TRUE)
 f <-c(5:11) 
 gr[ , f] <- apply(gr[ , f], 2,            
@@ -306,7 +307,137 @@ month12 <- aov(RG_12m~To, data = gr.12m)
 summary(month12) #p=0.129
 
 
+#### PAM of metal frame corals per species (Figure S4) ####
+taipam <-read.csv("Corals_Effective_Quantum_Yield.csv", header=T, de=".", stringsAsFactors=F)
 
+###Acropora japonica
+Ajpam <-subset(taipam, Species=="Acropora japonica")
+Ajpam$Group <-factor(Ajpam$Group, levels = c("ToHepingdao", "ControlXiehe", "ToWaimushan"))
+
+#graph
+ggboxplot(Ajpam, x = "Sampling_time", y = "Yield",
+                        color = "Group", 
+                        add = "jitter",
+                        palette = c("ToHepingdao"="#99CC00", "ControlXiehe"="#CC0033","ToWaimushan"="#0000FF"),
+                        ylab = "Effective quantum yield (∆F/Fm')",
+                        xlab = "Monitoring time",
+                        title = "Acropora japonica",
+                        font.title = c(24, "bold"),
+                        font.x = c(20, "bold"), font.y = c(20, "bold"),
+                        font.tickslab = c(10, "bold"),
+                        legend = c("right"), 
+                        font.legend = c(14, "plain"),
+                        ylim = c(0.15,0.85))
+
+###Acropora cf. cerealis
+A2pam <-subset(taipam, Species=="Acropora cf. cerealis")
+A2pam$Group <-factor(A2pam$Group, levels = c("ToHepingdao", "ControlXiehe", "ToWaimushan"))
+
+#graph
+ggboxplot(A2pam, x = "Sampling_time", y = "Yield",
+           color = "Group", 
+           add = "jitter",
+           palette = c("ToHepingdao"="#99CC00", "ControlXiehe"="#CC0033","ToWaimushan"="#0000FF"),
+           ylab = "Effective quantum yield (∆F/Fm')",
+           xlab = "Monitoring time",
+           title = "Acropora cf. cerealis",
+           font.title = c(24, "bold"),
+           font.x = c(20, "bold"), font.y = c(20, "bold"),
+           font.tickslab = c(10, "bold"),
+           legend = c("right"), 
+           font.legend = c(14, "plain"),
+           ylim = c(0.15,0.85))
+
+###Cyphastrea microphthalma
+Cmpam <-subset(taipam, Species=="Cyphastrea microphthalma")
+Cmpam$Group <-factor(Cmpam$Group, levels = c("ToHepingdao", "ControlXiehe", "ToWaimushan"))
+
+#graph
+ggboxplot(Cmpam, x = "Sampling_time", y = "Yield",
+           color = "Group", 
+           add = "jitter",
+           palette = c("ToHepingdao"="#99CC00", "ControlXiehe"="#CC0033","ToWaimushan"="#0000FF"),
+           ylab = "Effective quantum yield (∆F/Fm')",
+           xlab = "Monitoring time",
+           title = "Cyphastrea microphthalma",
+           font.title = c(24, "bold"),
+           font.x = c(20, "bold"), font.y = c(20, "bold"),
+           font.tickslab = c(10, "bold"),
+           legend = c("right"), 
+           font.legend = c(14, "plain"),
+           ylim = c(0.15,0.85))
+
+###Favites pentagona
+Fppam <-subset(taipam, Species=="Favites pentagona")
+Fppam$Group <-factor(Fppam$Group, levels = c("ToHepingdao", "ControlXiehe", "ToWaimushan"))
+
+#graph
+ggboxplot(Fppam, x = "Sampling_time", y = "Yield",
+           color = "Group", 
+           add = "jitter",
+           palette = c("ToHepingdao"="#99CC00", "ControlXiehe"="#CC0033","ToWaimushan"="#0000FF"),
+           ylab = "Effective quantum yield (∆F/Fm')",
+           xlab = "Monitoring time",
+           title = "Favites pentagona",
+           font.title = c(24, "bold"),
+           font.x = c(20, "bold"), font.y = c(20, "bold"),
+           font.tickslab = c(10, "bold"),
+           legend = c("right"), 
+           font.legend = c(14, "plain"),
+           ylim = c(0.15,0.85))
+
+###Psammocora cf. albopicta
+Papam <-subset(taipam, Species=="Psammocora albopicta")
+Papam$Group <-factor(Papam$Group, levels = c("ToHepingdao", "ControlXiehe", "ToWaimushan"))
+
+#graph
+ggboxplot(Papam, x = "Sampling_time", y = "Yield",
+           color = "Group", 
+           add = "jitter",
+           palette = c("ToHepingdao"="#99CC00", "ControlXiehe"="#CC0033","ToWaimushan"="#0000FF"),
+           ylab = "Effective quantum yield (∆F/Fm')",
+           xlab = "Monitoring time",
+           title = "Psammocora cf. albopicta",
+           font.title = c(24, "bold"),
+           font.x = c(20, "bold"), font.y = c(20, "bold"),
+           font.tickslab = c(10, "bold"),
+           legend = c("right"), 
+           font.legend = c(14, "plain"),
+           ylim = c(0.15,0.85))
+
+#### PAM STATS per sampling time between species (Table S4) ####
+### subsetting per sampling time
+pretran <-subset (taipam, Sampling_time=="Before ")
+tran1w <-subset (taipam, Sampling_time=="1 week")
+tran1m <-subset (taipam, Sampling_time=="1 month")
+tran2m <-subset (taipam, Sampling_time=="2 months")
+tran3m <-subset(taipam, Sampling_time=="3 months")
+tran6m <-subset(taipam, Sampling_time=="6 months")
+tran9m <-subset(taipam, Sampling_time=="9 months")
+tran12m <-subset(taipam, Sampling_time=="12 months")
+
+fligner.test(pretran$Yield~pretran$Species) #p-value = 4.414e-05
+fligner.test(tran1w$Yield~tran1w$Species) #p-value = 0.001105
+fligner.test(tran1m$Yield~tran1m$Species) #p-value = 0.007649
+fligner.test(tran2m$Yield~tran2m$Species) #p-value = 0.3894
+fligner.test(tran3m$Yield~tran3m$Species) #p-value = 0.01325
+
+kruskal.test(Yield~Species, data = pretran) #chi-squared = 204.73, df = 4, p-value < 2.2e-16
+dunnTest(Yield~Species, data = pretran, method = "bonferroni")
+kruskal.test(Yield~Species, data = tran1w) #chi-squared = 10.667, df = 4, p-value = 0.03058
+dunnTest(Yield~Species, data = tran1w, method = "bonferroni") #not different!
+kruskal.test(Yield~Species, data = tran1m) #chi-squared = 13.138, df = 4, p-value = 0.01062
+dunnTest(Yield~Species, data = tran1m, method = "bonferroni")
+kruskal.test(Yield~Species, data = tran2m) #chi-squared = 1.1612, df = 4, p-value = 0.8845
+dunnTest(Yield~Species, data = tran2m, method = "bonferroni")
+kruskal.test(Yield~Species, data = tran3m) #chi-squared = 13.035, df = 4, p-value = 0.01111
+dunnTest(Yield~Species, data = tran3m, method = "bonferroni")
+kruskal.test(Yield~Species, data = tran6m) #chi-squared = 28.845, df = 4, p-value = 8.404e-06
+dunnTest(Yield~Species, data = tran6m, method = "bonferroni")
+kruskal.test(Yield~Species, data = tran9m) #chi-squared = 100.59, df = 4, p-value < 2.2e-16
+dunnTest(Yield~Species, data = tran9m, method = "bonferroni")
+kruskal.test(Yield~Species, data = tran12m) #chi-squared = 26.339, df = 4, p-value = 2.704e-05
+dunnTest(Yield~Species, data = tran12m, method = "bonferroni")
 
 
 

@@ -12,9 +12,6 @@ library(pairwiseAdonis)#pairwise.adonis function
 
 
 
-
-
-
 #### Physical parameters (Figure 3) ####
 ###upload data set
 data.env <-read.csv('Physical_parameters.csv',header=TRUE)
@@ -476,6 +473,51 @@ mds.var.per #34.4 22.7 12.0  8.5  4.9  3.6  3.1  2.4  1.7  1.4  1.1  0.8  0.8  0
 perma <-adonis2(dismat~data.ben.1$sites, data = data.ben, by=NULL)
 perma #Df 4,20 ; R2=0.35944; F=2.8057, p=0.001 ***
 pairwise.adonis(dismat,data.ben.1$sites)
+
+
+#### Status of corals (Figure S3) ####
+status <- read_excel("Coral_status.xlsx", col_names = TRUE)
+status.frame <-subset(status, Method=="Frame")
+status.substrate <-subset(status, Method=="Seabed")
+status.frame$Species <-factor(status.frame$Species, levels = c("Acropora japonica", "Acropora cf. cerealis", "Cyphastrea microphthalma", "Favites pentagona", "Psammocora cf. albopicta"))
+status.substrate$Species <-factor(status.substrate$Species, levels = c("Acropora japonica", "Acropora cf. cerealis", "Cyphastrea microphthalma", "Favites pentagona", "Psammocora cf. albopicta"))
+status.frame$Status <-factor(status.frame$Status, levels = c("Lost","Dead","Grow-","Grow+"))
+status.substrate$Status <-factor(status.substrate$Status, levels = c("Lost","Dead","Grow-","Grow+"))
+groupcol <- c("Lost"="#66FFB2","Dead"="#A0A0A0","Grow-"="#FF6666","Grow+"="#66B2FF")
+
+#frame
+ggplot(status.frame, aes(x=Species,
+                         y=Percentage,
+                         fill = Status))+
+  geom_bar(position = "fill", stat = "identity")+
+  scale_fill_manual(values = groupcol)+
+  scale_y_continuous(labels = scales::percent_format())+
+  ggtitle ("Status of corals in Frame") +
+  theme(legend.key.size = unit(1, "cm")) +
+  theme(legend.text = element_text(size = 10)) +
+  theme(legend.title = element_text(size=15)) +
+  theme(legend.key = element_rect(fill = "white", colour = "white")) + 
+  theme(axis.line = element_line(color='black'),
+        panel.background = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank())
+
+#substrate
+ggplot(status.substrate, aes(x=Species,
+                             y=Percentage,
+                             fill = Status))+
+  geom_bar(position = "fill", stat = "identity")+
+  scale_fill_manual(values = groupcol)+
+  scale_y_continuous(labels = scales::percent_format())+
+  ggtitle ("Status of corals in Seabed") +
+  theme(legend.key.size = unit(1, "cm")) +
+  theme(legend.text = element_text(size = 10)) +
+  theme(legend.title = element_text(size=15)) +
+  theme(legend.key = element_rect(fill = "white", colour = "white")) + 
+  theme(axis.line = element_line(color='black'),
+        panel.background = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank())
 
 
 
